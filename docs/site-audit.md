@@ -10,14 +10,15 @@
 
 This audit is based on two evidence sources:
 
-1. **The actual homepage export** you provided (saved HTML, CSS, JS, and asset references). This is the highest-traffic, highest-value page and gave me the real markup, navigation, calls-to-action, scripts, tracking, and integrations.
-2. **The public search index + business listings** (Google/Bing cache, CrossFit affiliate directory, Yelp, Facebook, Instagram, Wellhub) for the inner pages that were not included in the export.
+1. **The homepage export** (saved HTML, CSS, JS, and asset references) — the real markup, navigation, calls-to-action, scripts, tracking, and integrations.
+2. **The actual inner-page exports** you provided in a second pass: **Pricing, Schedule, FAQ, Member Benefits, and Membership Resources**. These replaced my earlier search-index reconstruction with real page code and corrected a key finding (pricing — see §4.2).
+3. **The public search index + business listings** (CrossFit affiliate directory, Yelp, Facebook, Instagram, Wellhub) for the few pages still not exported (About, Contact, Events, Membership Assistance).
 
-**What I could verify directly (from code):** platform/hosting, navigation, homepage copy and CTAs, analytics/tracking, third-party integrations, structured data, and image/heading structure.
+**What I verified directly (from code):** platform/hosting, navigation, homepage + 5 inner pages' copy and CTAs, the full pricing table, analytics/tracking, third-party integrations, structured data, and image/heading structure.
 
-**What I inferred (from the index, not code):** the exact body copy and layout of inner pages (Pricing, Schedule, FAQ, About, Contact, Membership Assistance, Member Benefits, Events). Where a finding depends on something I couldn't see in code, I've flagged it as **[verify]**.
+**What I still inferred (from the index, not code):** the exact layout of About, Contact, Events, and Membership Assistance. Flagged as **[verify]** where relevant.
 
-> A logical next step is a hands-on pass with login access to the GoDaddy editor plus live Lighthouse/PageSpeed, GA4, and Search Console data. That would let me quantify current conversion rates and confirm the inner-page findings. This document is structured so it stays useful either way.
+> A logical next step is a hands-on pass with login access to the GoDaddy editor plus live Lighthouse/PageSpeed, GA4, and Search Console data, to quantify current conversion rates. This document is structured so it stays useful either way.
 
 ---
 
@@ -38,6 +39,7 @@ You weren't sure what GoDaddy can do transactionally. The export answers this cl
 | **Online Store / cart** | **Already active** | The **Events** and **CFT Merch** pages use GoDaddy's commerce cart (`olsPage=cart` in the markup). So you *already* have the ability to take payments for tickets and merch. |
 | **Email marketing** | **Active** | A **Mailchimp** signup is linked from the homepage. (GoDaddy also has its own email marketing; you're currently using Mailchimp.) |
 | **Waivers** | **Active** | Waivers run through **SignNow** (external link). |
+| **Workout tracking / leaderboards** | **Active (SugarWOD)** | The Pricing page lists "Access To Workout & Progress Tracking via **SugarWOD**" as a member benefit. SugarWOD already gives members daily WOD posting, score logging, PRs, and class leaderboards — so part of your "workout announcements + leaderboards" goal already exists. Important for the platform decision in §8. |
 | **Appointment / class booking** | **Not used** | GoDaddy offers an "Appointments" booking add-on, but it is **not** wired up. The primary "BOOK NOW" button just goes to the contact form. |
 | **Analytics** | **GA4 installed** (`G-M5DZNS31LJ`) | No Meta/Facebook pixel detected (`fbq` is absent) → **no retargeting** is possible today. |
 | **Custom plugins / code** | **Very limited** | GoDaddy Website Builder is a closed, template-based builder. You cannot install arbitrary plugins (unlike WordPress) or run a custom server-side registration/leaderboard app on it. Custom HTML embeds are restricted. |
@@ -68,6 +70,8 @@ From the navigation in the export plus the search index, the current sitemap is:
 
 Plus a **"More"** nav item that currently points to `#` (an empty/placeholder link — see findings).
 
+**Programs offered (from Schedule + Pricing pages)** — a strong, broad roster that the nav doesn't fully surface: group CrossFit (all levels, M–Sat), **Foundations/Fundamentals** on-ramp (4×60-min), **Open Gym** (Thursdays), **Spanish/bilingual classes** (M/W/F 6:30pm), **Ageless Athletes 55+** (T/Th 7:30am), **CrossFit Kids** (ages 4–7 and 8–12), **personal training** (Troli Train), drop-ins, and the free **Saturday Community WOD**.
+
 **Observations on IA:**
 - The nav is **long and flat (11 top-level items)**. "Member Benefits," "Membership Resources," and "Membership Assistance" are three near-synonymous items that dilute attention and confuse non-members.
 - The slug `membership-resources-1` carries GoDaddy's auto-dedupe `-1` suffix, suggesting a page was duplicated/re-created at some point. Minor, but worth cleaning up for SEO/tidiness.
@@ -84,10 +88,29 @@ The hero and header CTAs ("**BOOK NOW**", "**MORE INFO**", "**GET IN TOUCH**") a
 
 > **Recommendation:** Make the #1 CTA a real, self-serve "Claim your free class" flow that captures name/email/phone *and* lets them pick a class time (or at least immediately confirms next steps + adds them to a nurture email). On GoDaddy this can be the **Appointments** add-on; long-term it's the gym-management platform's booking widget (Section 8).
 
-### 🔴 4.2 No pricing is shown on the Pricing page
-The Pricing page says fitness should be "accessible and affordable" and "Contact us about our month-to-month membership pricing" — but **lists no prices**. Hiding price is one of the most reliable conversion killers for local gyms: price-shopping prospects bounce to a competitor who *does* show numbers, and you lose the ones who won't "ask."
+### 🟡 4.2 Pricing is fully transparent (good!) — but it's a long, unguided list with no way to act
+**Correction to my first-pass audit:** the Pricing page **does** list complete, transparent pricing. This is a genuine strength — keep it. For the record, the current table is:
 
-> **Recommendation:** Publish at least a representative price (or a clear range / starting-at price) for the core memberships, plus the 55+ option and personal training. If the strategy is intentionally "book a No-Sweat Intro first," then *say that* and make the page's job to book the intro — don't leave a dead end.
+| Option | Price |
+|---|---|
+| First class (Greenville County residents) | Free |
+| Foundations (on-ramp) | $60 |
+| Unlimited — month-to-month | $175/mo |
+| Unlimited — 6-month (billed monthly) | $160/mo |
+| Unlimited — annual (billed monthly) | $150/mo |
+| Spanish/Bilingual classes (M/W/F 6:30pm) | $120/mo |
+| Ageless Athletes 55+ (T/Th 7:30am) | $80/mo |
+| 8-Class Punchcard (no expiration) | $120 |
+| Drop-in — one class | $20 |
+| Drop-in — one week | $50 |
+| Personal training (Troli Train) | "Contact for scheduling" |
+
+Plus a 10% discount (first responders, military, teachers, full-time students, healthcare, family in-household) and the My Compassion Connection grant. So the problem is **not** transparency — it's two things:
+
+1. **No way to act on the page.** There are no "Join" / "Sign up" / "Buy" buttons on any tier — every path still routes to *contact us* or *sign a waiver*. A ready-to-buy visitor has nowhere to convert. (This is the same dead-end as §4.1.)
+2. **Choice overload, no guidance.** Eleven options with no "Most popular" flag, no recommended starting path, and no framing of *which plan fits whom*. A newcomer can't tell that the intended journey is likely *free class → Foundations → Unlimited*.
+
+> **Recommendation:** Keep the transparent prices. Add (a) a real online enroll/checkout or "Start free class" button on the primary tiers, (b) a "Most popular" badge on the month-to-month Unlimited (or annual) plan, and (c) a one-line "New here? Start with a free class → Foundations → membership" path at the top so the list reads as a journey, not a menu.
 
 ### 🔴 4.3 Weak, generic value proposition above the fold
 The hero is an animated banner repeating **"Effort is a Choice - CrossFit Taylors"** four times, with the supporting line *"CrossFit Taylors is a gym located in the Greenville, SC area. Our focus is to use a positive group class environment to help you make health and fitness a priority."*
@@ -154,10 +177,11 @@ The page renders the **same H1 ("Effort is a Choice - CrossFit Taylors") twice**
 
 ## 6. What's working (don't break these in the redesign)
 
-- Clear, friendly brand voice and a genuinely strong **offer set**: first class free, free Saturday Community WOD, Foundations on-ramp, month-to-month (no contracts), referral program ($60/$60), 55+ classes, Spanish-speaking classes, hardship/grant assistance.
-- A real **community story** (owner Cameron, Taylors Mill location, events like Murph, Bring-a-Friend Week, member hangouts).
-- GA4 already in place; commerce cart already enabled; Mailchimp already collecting emails; waivers already digital (SignNow).
-- Decent baseline local SEO footprint (affiliate directory, Yelp, Google listing).
+- **Transparent, well-structured pricing** with options for every budget (drop-ins, punchcard, 55+, bilingual, multiple commitment terms) — a real trust asset; keep it.
+- A genuinely strong, broad **program & offer set**: first class free, free Saturday Community WOD, Foundations on-ramp, CrossFit Kids, Spanish-speaking and 55+ classes, month-to-month (no contracts), referral program ($60/$60), and a rich **partner-benefits page** (Onward PT, Victory Grips, 2POOD, TYR, Revival Cleaning, member shower) plus hardship/grant assistance.
+- A real **community story** (owner Cameron, Taylors Mill location, events like Murph, Bring-a-Friend Week, member hangouts) and a solid, reassuring **FAQ** (glossary, "you don't need to be in shape," scaling, safety).
+- **SugarWOD already in use** for workout posting, score logging, and leaderboards — a head start on the "workout announcements + leaderboards" goal.
+- GA4 in place; commerce cart enabled; Mailchimp collecting emails; waivers digital (SignNow). Decent baseline local SEO footprint.
 
 The redesign is mostly about **reorganizing and sharpening** existing content around a clear conversion path — not rewriting the gym's story.
 
@@ -168,7 +192,7 @@ The redesign is mostly about **reorganizing and sharpening** existing content ar
 ### Phase 0 — Quick wins on the current GoDaddy site (days, no migration)
 1. Rewrite the hero: benefit headline + "first class free" + one primary button.
 2. Turn "BOOK NOW" into a real lead capture (GoDaddy **Appointments** add-on, or at minimum an embedded form that auto-replies and tags the lead in Mailchimp).
-3. Put **pricing (or a clear starting-at price / intro offer)** on the Pricing page.
+3. Keep the transparent pricing; add a "Most popular" badge, a guided "free class → Foundations → membership" path, and a real enroll/checkout (or "Start free class") button on the primary tiers.
 4. Add a sticky mobile "Claim free class" bar.
 5. Add the **Meta Pixel** and define **GA4 conversion events** (lead form, free-class request, store purchase).
 6. Fix the LocalBusiness schema (full address, hours, `sameAs`, `priceRange`).
@@ -207,6 +231,11 @@ Reality: **GoDaddy Website Builder cannot do this.** It's a marketing-site build
 - Purpose-built for functional-fitness *competitions*: registration, **scheduled workout release**, **athlete online score submission**, affiliate scoring validation, **heat/lane scheduling**, athlete check-in, **real-time leaderboards** (TV/LED-wall displays), and a spectator/athlete app.
 - **Pricing model:** per-ticket platform fee (~4% + $2.00/ticket) — you pay as you sell, no monthly base.
 - **Best for:** a real throwdown/competition with heats, lanes, judges, and a live leaderboard wall — the parts a gym-management tool only does lightly.
+
+### Where SugarWOD fits
+You **already run SugarWOD** for daily workout posting, score logging, PRs, and class leaderboards — so the "workout announcements + leaderboards" piece of your goal is partly solved for *class* programming today. Two implications:
+- For **everyday class life**, SugarWOD already covers workout announcements and leaderboards; you mainly need to connect it to booking/billing and surface it on the site.
+- For **events/competitions**, SugarWOD is not a registration/heat/scoring engine — that's the gap PushPress (light) or Competition Corner (full) fills. Note PushPress has its own member-app feed/leaderboard, so when you adopt a management platform you'll decide whether to keep SugarWOD alongside it or consolidate.
 
 ### Recommended architecture
 For CrossFit Taylors' stated goals, the cleanest path is:
@@ -265,7 +294,12 @@ Every prospect-facing page gets **one clear primary CTA** ("Claim your free clas
 - **Platform:** GoDaddy Website Builder — asset paths `website-builder-data-prod`, `isteam` image CDN, `blobby` store, footer `godaddy.com/websites/website-builder` link.
 - **Commerce active:** `/events` and `/cft-merch` use GoDaddy store cart (`data-page-query="olsPage=cart"`).
 - **Analytics:** GA4 `G-M5DZNS31LJ` via `googletagmanager.com/gtag/js`. No `fbq` (no Meta pixel).
-- **Integrations:** Mailchimp (`mailchi.mp/...`) for email; SignNow (`signnow.com/s/...`) for waivers.
+- **Integrations:** Mailchimp (`mailchi.mp/...`) for email; SignNow (`signnow.com/s/...`) for waivers; **SugarWOD** for workout/score tracking & leaderboards (named on Pricing page).
+- **Pricing page (verified from export):** Foundations $60; Unlimited month-to-month $175/mo, 6-mo $160/mo, annual $150/mo; Spanish/Bilingual $120/mo; Ageless 55+ $80/mo; 8-class punchcard $120; drop-in $20/class, $50/week; personal training "contact"; 10% discount; grant program. **No per-tier "join/buy" buttons** — all links go to Schedule, Membership Assistance, or SignNow.
+- **Schedule page (verified):** full class times M–Sat; Open Gym Thursday (5:30–6:30am, 9–10am, 12–1pm, 4:30–7pm); Spanish M/W/F 6:30pm; Ageless 55+ T/Th 7:30am; **CrossFit Kids (4–7, 8–12)**; Fundamentals 4×60-min "contact for scheduling."
+- **FAQ page (verified):** What is CrossFit, what to bring, "first class free for Greenville County residents," safety/scaling, "do I need to be in shape? No," class structure, CrossFit glossary (AMRAP/EMOM/Metcon/Tabata), external resources.
+- **Member Benefits (verified):** referral $60/$60; partner discounts — Onward PT (10% eval w/ Dr. Ryan Savage), Victory Grips (code CFTAYLORS), 2POOD (CROSSFITTAYLORS10), TYR (SE20971WA), Revival Cleaning (15%); Troli Train personal training + podcast; member shower.
+- **Membership Resources (verified):** grant application, membership hold (1–12 weeks/yr) and cancellation request forms (CFT replies in 2–3 business days).
 - **Nav (11 items):** Home, About Us, Schedule, Pricing, FAQ, Events, Member Benefits, Membership Resources, Membership Assistance, CFT Merch, More (`#`).
 - **CTAs:** "BOOK NOW" → `/contact-us`; "MORE INFO" → `/contact-us#…`; "GET IN TOUCH" → `/contact-us`; "SIGN WAIVER HERE" → SignNow.
 - **Hero/H1:** "Effort is a Choice - CrossFit Taylors" (rendered twice).
