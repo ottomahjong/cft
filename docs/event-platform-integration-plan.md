@@ -4,6 +4,8 @@
 **Companion to:** `docs/site-audit.md` (see §2 and §8)
 **Prepared:** June 2026
 
+> **Update / direction change:** the owner has decided to **build a custom competition platform** (hosted on the site) for the *competition/event* piece rather than use Competition Corner — see [`custom-competition-platform.md`](./custom-competition-platform.md) for the prototype assessment and build roadmap. This document remains the reference for the *gym-operations* decision (memberships, billing, class booking), where buying **PushPress** is still the recommended path. The two are independent: build the competition engine, and separately decide whether to buy gym-ops software.
+
 ---
 
 ## 0. The one thing to internalize first
