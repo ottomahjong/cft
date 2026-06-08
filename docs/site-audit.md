@@ -36,7 +36,7 @@ You weren't sure what GoDaddy can do transactionally. The export answers this cl
 
 | Capability | Status on the current site | Notes |
 |---|---|---|
-| **Online Store / cart** | **Already active** | The **Events** and **CFT Merch** pages use GoDaddy's commerce cart (`olsPage=cart` in the markup). So you *already* have the ability to take payments for tickets and merch. |
+| **Online Store / cart** | **Present in markup but NOT connected** | The GoDaddy cart markup (`olsPage=cart`) exists in the page, but the store **is not set up or wired to a payment processor** — it doesn't actually take orders. **CFT Merch is an external link to a Printify pop-up shop**, not a GoDaddy store. So commerce/payments are effectively **not live on the site today**; the capability exists in the product but would need to be configured (incl. connecting Stripe). |
 | **Email marketing** | **Active** | A **Mailchimp** signup is linked from the homepage. (GoDaddy also has its own email marketing; you're currently using Mailchimp.) |
 | **Waivers** | **Active** | Waivers run through **SignNow** (external link). |
 | **Workout tracking / leaderboards** | **Active (SugarWOD)** | The Pricing page lists "Access To Workout & Progress Tracking via **SugarWOD**" as a member benefit. SugarWOD already gives members daily WOD posting, score logging, PRs, and class leaderboards — so part of your "workout announcements + leaderboards" goal already exists. Important for the platform decision in §8. |
@@ -58,11 +58,11 @@ From the navigation in the export plus the search index, the current sitemap is:
 /schedule               Group Class Schedule
 /pricing                Membership Pricing (no public prices – "contact us")
 /faq                    FAQ
-/events                 Events (uses GoDaddy store cart)
+/events                 Events (cart markup present but store not connected)
 /member-benefits        Member Benefits (referral $60/$60, Victory Grips code, etc.)
 /membership-resources-1 Membership Resources
 /membership-assistance  Membership Assistance (My Compassion Connection grants, hold/cancel)
-/cft-merch              CFT Merch (store)
+/cft-merch              CFT Merch (external link → Printify pop-up shop)
 /contact-us             Contact Us (the de-facto conversion endpoint)
 /privacy-policy         Privacy Policy
 /terms-and-conditions   Terms & Conditions
@@ -181,7 +181,7 @@ The page renders the **same H1 ("Effort is a Choice - CrossFit Taylors") twice**
 - A genuinely strong, broad **program & offer set**: first class free, free Saturday Community WOD, Foundations on-ramp, CrossFit Kids, Spanish-speaking and 55+ classes, month-to-month (no contracts), referral program ($60/$60), and a rich **partner-benefits page** (Onward PT, Victory Grips, 2POOD, TYR, Revival Cleaning, member shower) plus hardship/grant assistance.
 - A real **community story** (owner Cameron, Taylors Mill location, events like Murph, Bring-a-Friend Week, member hangouts) and a solid, reassuring **FAQ** (glossary, "you don't need to be in shape," scaling, safety).
 - **SugarWOD already in use** for workout posting, score logging, and leaderboards — a head start on the "workout announcements + leaderboards" goal.
-- GA4 in place; commerce cart enabled; Mailchimp collecting emails; waivers digital (SignNow). Decent baseline local SEO footprint.
+- GA4 in place; Mailchimp collecting emails; waivers digital (SignNow); merch via an external Printify shop. Decent baseline local SEO footprint. (Note: the GoDaddy store/cart is *not* connected — see §2.)
 
 The redesign is mostly about **reorganizing and sharpening** existing content around a clear conversion path — not rewriting the gym's story.
 
@@ -217,6 +217,8 @@ These alone should move the needle before any platform change.
 
 You want to eventually run, **on your own site**, the full lifecycle:
 **registration → payment → email/announcements → day-of check-in → workout announcements → event scheduling → leaderboards → close.**
+
+> **A detailed, step-by-step build/integration plan for this lives in [`event-platform-integration-plan.md`](./event-platform-integration-plan.md)** — including what GoDaddy's Stripe and embed capabilities actually allow, the three integration depths, a recommended architecture, a phased rollout, and a subdomain strategy. The summary below is the orientation; that document is the plan.
 
 Reality: **GoDaddy Website Builder cannot do this.** It's a marketing-site builder with a light store. The capabilities you listed are exactly what dedicated gym-management and competition platforms exist to provide. The two examples you named sit in two different categories:
 
@@ -292,7 +294,7 @@ Every prospect-facing page gets **one clear primary CTA** ("Claim your free clas
 ## 11. Evidence appendix (from the homepage export)
 
 - **Platform:** GoDaddy Website Builder — asset paths `website-builder-data-prod`, `isteam` image CDN, `blobby` store, footer `godaddy.com/websites/website-builder` link.
-- **Commerce active:** `/events` and `/cft-merch` use GoDaddy store cart (`data-page-query="olsPage=cart"`).
+- **Commerce NOT active:** GoDaddy cart markup (`data-page-query="olsPage=cart"`) is present on `/events`, but the store is **not connected to a processor** and does not take orders. `/cft-merch` is an **external link to a Printify pop-up shop**, not a GoDaddy store. (Confirmed by owner.)
 - **Analytics:** GA4 `G-M5DZNS31LJ` via `googletagmanager.com/gtag/js`. No `fbq` (no Meta pixel).
 - **Integrations:** Mailchimp (`mailchi.mp/...`) for email; SignNow (`signnow.com/s/...`) for waivers; **SugarWOD** for workout/score tracking & leaderboards (named on Pricing page).
 - **Pricing page (verified from export):** Foundations $60; Unlimited month-to-month $175/mo, 6-mo $160/mo, annual $150/mo; Spanish/Bilingual $120/mo; Ageless 55+ $80/mo; 8-class punchcard $120; drop-in $20/class, $50/week; personal training "contact"; 10% discount; grant program. **No per-tier "join/buy" buttons** — all links go to Schedule, Membership Assistance, or SignNow.
