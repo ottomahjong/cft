@@ -1,0 +1,123 @@
+/* ============================================================================
+   CrossFit Taylors — Brand Design Tokens
+   Single source of truth for the marketing site (where GoDaddy allows custom
+   color) AND the React/Supabase competition app. See:
+   docs/website-redesign-and-design-system.md
+
+   NOTE on GoDaddy Websites + Marketing: custom HEX colors are supported, but
+   custom fonts are NOT. Pick the nearest available face in GoDaddy's "Advanced"
+   font picker per the priority lists below. These variables are directly usable
+   in the competition app and any future code-based build.
+   ============================================================================ */
+
+:root {
+  /* ---- Color: heritage / tactical palette (confirm hex vs. final logo) ---- */
+  --cft-ink:          #15160F; /* near-black text on light; dark-section bg     */
+  --cft-forest:       #23281A; /* deepest green; dark depth / surfaces          */
+  --cft-olive:        #565E36; /* PRIMARY brand accent: buttons, links          */
+  --cft-olive-bright: #6E7843; /* hover/active, small pops                       */
+  --cft-bone:         #F2EEE3; /* off-white: primary light background           */
+  --cft-paper:        #FAF8F2; /* card/surface on light                          */
+  --cft-gray-warm:    #8C887B; /* muted text, captions                          */
+  --cft-gray-line:    #D8D3C6; /* hairlines / dividers                          */
+  --cft-clay:         #B4552D; /* OPTIONAL urgency accent only (e.g. "filling") */
+
+  /* ---- Semantic roles (light (default) surface) ---- */
+  --cft-bg:           var(--cft-bone);
+  --cft-surface:      var(--cft-paper);
+  --cft-text:         var(--cft-ink);
+  --cft-text-muted:   var(--cft-gray-warm);
+  --cft-border:       var(--cft-gray-line);
+  --cft-accent:       var(--cft-olive);
+  --cft-accent-hover: var(--cft-olive-bright);
+  --cft-on-accent:    var(--cft-bone);
+
+  /* ---- Typography ----
+     Display/headline driver: modern serif  -> Fraunces -> DM Serif Display -> Playfair Display
+     Body/UI: geometric (Futura-like) sans  -> Jost -> Montserrat -> Poppins
+     Eyebrow/label/badge: League Spartan (all-caps, tracked) — brand continuity */
+  --cft-font-display: "Fraunces", "DM Serif Display", "Playfair Display", Georgia, serif;
+  --cft-font-body:    "Jost", "Montserrat", "Poppins", system-ui, sans-serif;
+  --cft-font-label:   "League Spartan", "Jost", "Montserrat", sans-serif;
+
+  /* Type scale (rem) — headlines mixed-case serif; labels all-caps */
+  --cft-fs-display: 3.25rem;
+  --cft-fs-h1:      2.5rem;
+  --cft-fs-h2:      1.875rem;
+  --cft-fs-h3:      1.375rem;
+  --cft-fs-body:    1.0625rem;
+  --cft-fs-small:   0.8125rem;
+  --cft-tracking-label: 0.12em;
+
+  /* ---- Spacing (8px base) ---- */
+  --cft-space-1: 0.5rem;
+  --cft-space-2: 1rem;
+  --cft-space-3: 1.5rem;
+  --cft-space-4: 2rem;
+  --cft-space-6: 3rem;
+  --cft-section-y: clamp(4rem, 8vw, 6rem); /* 64–96px section rhythm */
+
+  /* ---- Radius / elevation ---- */
+  --cft-radius:     6px;
+  --cft-radius-lg:  10px;
+  --cft-shadow:     0 1px 3px rgba(21, 22, 15, 0.08), 0 8px 24px rgba(21, 22, 15, 0.06);
+}
+
+/* ---- Dark variant: hero/events/footer sections AND the competition app ---- */
+.cft-dark,
+[data-theme="dark"] {
+  --cft-bg:         var(--cft-ink);
+  --cft-surface:    var(--cft-forest);
+  --cft-text:       var(--cft-bone);
+  --cft-text-muted: var(--cft-gray-warm);
+  --cft-border:     #2E3324;
+  --cft-accent:     var(--cft-olive-bright);
+  --cft-on-accent:  var(--cft-ink);
+}
+
+/* ============================================================================
+   Reference component styles (copy into the app; mirror visually in GoDaddy)
+   ============================================================================ */
+
+.cft-eyebrow {
+  font-family: var(--cft-font-label);
+  text-transform: uppercase;
+  letter-spacing: var(--cft-tracking-label);
+  font-size: var(--cft-fs-small);
+  color: var(--cft-accent);
+}
+
+.cft-h-display { font-family: var(--cft-font-display); font-size: var(--cft-fs-display); line-height: 1.05; color: var(--cft-text); }
+.cft-h1        { font-family: var(--cft-font-display); font-size: var(--cft-fs-h1);      line-height: 1.1;  color: var(--cft-text); }
+.cft-body      { font-family: var(--cft-font-body);    font-size: var(--cft-fs-body);    line-height: 1.6;  color: var(--cft-text); }
+
+.cft-btn-primary {
+  font-family: var(--cft-font-body);
+  background: var(--cft-accent);
+  color: var(--cft-on-accent);
+  border: none;
+  border-radius: var(--cft-radius);
+  padding: 0.75rem 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.cft-btn-primary:hover { background: var(--cft-accent-hover); }
+
+.cft-btn-secondary {
+  font-family: var(--cft-font-body);
+  background: transparent;
+  color: var(--cft-text);
+  border: 1.5px solid var(--cft-accent);
+  border-radius: var(--cft-radius);
+  padding: 0.75rem 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cft-card {
+  background: var(--cft-surface);
+  border: 1px solid var(--cft-border);
+  border-radius: var(--cft-radius-lg);
+  box-shadow: var(--cft-shadow);
+  padding: var(--cft-space-3);
+}
